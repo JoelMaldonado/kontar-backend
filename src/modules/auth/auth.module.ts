@@ -5,13 +5,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserAuthEntity } from './entities/user-auth';
 import { UserRoleEntity } from './entities/user-role.entity';
+import { ConfigModule } from '@nestjs/config';
+import { constants } from 'src/config/constants';
 
 @Module({
   imports: [
+    ConfigModule,
     JwtModule.register({
       global: true,
-      secret: 'sonic',
-      signOptions: { expiresIn: '4h' },
+      secret: constants.jwt_secret,
+      signOptions: { expiresIn: constants.jwt_expires_in },
     }),
     TypeOrmModule.forFeature([UserAuthEntity, UserRoleEntity]),
   ],

@@ -1,7 +1,7 @@
 export const responseHelper = {
   success: (
     data: any,
-    message: string = 'Operation successful',
+    message: string = 'Success',
     statusCode: number = 200,
   ) => {
     return {

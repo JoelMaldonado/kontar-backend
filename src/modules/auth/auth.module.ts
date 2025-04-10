@@ -13,8 +13,6 @@ import { constants } from 'src/config/constants';
     ConfigModule,
     JwtModule.register({
       global: true,
-      secret: constants.jwt_secret,
-      signOptions: { expiresIn: constants.jwt_expires_in },
     }),
     TypeOrmModule.forFeature([UserAuthEntity, UserRoleEntity]),
   ],

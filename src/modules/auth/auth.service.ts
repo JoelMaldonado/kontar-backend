@@ -28,7 +28,6 @@ export class AuthService {
       where: {
         username,
       },
-      relations: ['role'],
     });
 
     if (!user) {
@@ -41,20 +40,37 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    const payload = {
-      sub: user.id,
-      username: user.username,
-      role: user.role?.name,
-    };
+    const tokens = await this.getTokens(user.id);
 
-    const accessToken = await this.jwtService.signAsync(payload);
+    return tokens;
+  }
 
+  async refreshToken(id: number) {
+    const user = await this.userAuthRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario no válido');
+    }
+    const tokens = await this.getTokens(user.id);
+
+    return tokens;
+  }
+
+  async getTokens(id: number) {
+    const payload = { sub: id };
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION,
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+    });
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION,
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+    });
     return {
       accessToken,
-      user: {
-        username: user.username,
-        role: user.role?.name,
-      },
+      refreshToken,
     };
   }
 

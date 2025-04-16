@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { responseHelper } from 'src/config/response-helper';
 import { constants } from 'src/config/constants';
@@ -30,6 +40,17 @@ export class CategoryController {
       const user = request[constants.user];
       const category = await this.categoryService.create(user.sub, dto);
       return responseHelper.success(category, 'Category created successfully');
+    } catch (error) {
+      return responseHelper.error(error);
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
+    try {
+      const user = request[constants.user];
+      await this.categoryService.delete(user.sub, id);
+      return responseHelper.success(null, 'Category deleted successfully');
     } catch (error) {
       return responseHelper.error(error);
     }

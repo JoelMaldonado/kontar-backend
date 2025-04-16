@@ -9,7 +9,8 @@
     "build": "nest build",
     "dev": "nest start --watch",
     "start": "pm2 start dist/main.js --name kontar:3132",
-    "restart": "pm2 restart kontar:3132"
+    "restart": "pm2 restart kontar:3132",
+    "restart-env": "pm2 restart kontar:3132 --update-env"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
